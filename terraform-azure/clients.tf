@@ -28,7 +28,7 @@ resource "azurerm_virtual_machine_scale_set" "client-nodes" {
   name = "es-${var.es_cluster}-client-nodes"
   resource_group_name = "${azurerm_resource_group.elasticsearch.name}"
   location = "${var.azure_location}"
-  "sku" {
+  sku {
     name = "${var.client_instance_type}"
     tier = "Standard"
     capacity = "${var.clients_count}"
@@ -36,18 +36,18 @@ resource "azurerm_virtual_machine_scale_set" "client-nodes" {
   upgrade_policy_mode = "Manual"
   overprovision = false
 
-  "os_profile" {
+  os_profile {
     computer_name_prefix = "${var.es_cluster}-client"
     admin_username = "ubuntu"
     admin_password = "${random_string.vm-login-password.result}"
     custom_data = "${data.template_file.client_userdata_script.rendered}"
   }
 
-  "network_profile" {
+  network_profile {
     name = "es-${var.es_cluster}-net-profile"
     primary = true
 
-    "ip_configuration" {
+    ip_configuration {
       name = "es-${var.es_cluster}-ip-profile"
       subnet_id = "${azurerm_subnet.elasticsearch_subnet.id}"
       load_balancer_backend_address_pool_ids = ["${azurerm_lb_backend_address_pool.clients-lb-backend.id}"]
@@ -58,7 +58,7 @@ resource "azurerm_virtual_machine_scale_set" "client-nodes" {
     id = "${data.azurerm_image.kibana.id}"
   }
 
-  "storage_profile_os_disk" {
+  storage_profile_os_disk {
     caching        = "ReadWrite"
     create_option  = "FromImage"
     managed_disk_type = "Standard_LRS"

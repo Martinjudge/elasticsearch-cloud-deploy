@@ -68,7 +68,7 @@ resource "azurerm_virtual_machine" "single-node" {
     managed_disk_type = "Standard_LRS"
   }
 
-  "os_profile" {
+  os_profile {
     computer_name = "es-${var.es_cluster}-singlenode"
     admin_username = "ubuntu"
     admin_password = "${random_string.vm-login-password.result}"
